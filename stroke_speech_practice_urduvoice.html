@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stroke Speech Practice</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #fdfdfd; }
+    .card { border: 1px solid #ccc; border-radius: 10px; padding: 20px; margin: 20px auto; max-width: 400px; background: #fff; }
+    button { margin: 5px; padding: 10px 20px; border: none; border-radius: 5px; background: #007BFF; color: white; font-size: 16px; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <h2>Stroke Speech Practice</h2>
+  <div class="card" id="card">Saans gahri lo aur dheere dheere chhoro</div>
+  <div>
+    <button onclick="prevCard()">⬅ Prev</button>
+    <button onclick="nextCard()">Next ➡</button>
+  </div>
+  <div>
+    <button onclick="speakCurrent()">🔊 Play</button>
+  </div>
+
+  <script>
+    const cards = [
+      "Saans gahri lo aur dheere dheere chhoro",
+      "Honth band karo aur unhein jor se ghumao (lip rounding)",
+      "Zaban ko daayein aur baayein hilaao",
+      "Jabda kholo aur band karo",
+      "Bolo: Pa-Ta-Ka baar baar",
+      "Aahista aur saaf jumlay bolo: 'Mujhe pani chahiye'",
+      "Family ke saath dheere aur saaf baat karein"
+    ];
+    let current = 0;
+    const cardDiv = document.getElementById('card');
+
+    function showCard() {
+      cardDiv.textContent = cards[current];
+    }
+
+    function nextCard() {
+      current = (current + 1) % cards.length;
+      showCard();
+    }
+
+    function prevCard() {
+      current = (current - 1 + cards.length) % cards.length;
+      showCard();
+    }
+
+    function speakCurrent() {
+      let text = cards[current];
+      let utterance = new SpeechSynthesisUtterance(text);
+      let voices = speechSynthesis.getVoices();
+      let urduVoice = voices.find(v =>
+        v.lang.toLowerCase().includes("ur") ||
+        v.name.toLowerCase().includes("urdu")
+      );
+      if (urduVoice) {
+        utterance.voice = urduVoice;
+      } else {
+        console.log("⚠️ Urdu voice not found, using default");
+      }
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      speechSynthesis.speak(utterance);
+    }
+
+    speechSynthesis.onvoiceschanged = () => {};
+  </script>
+</body>
+</html>
